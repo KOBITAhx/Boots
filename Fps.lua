@@ -83,7 +83,14 @@ RunService.RenderStepped:Connect(function()
     end
 
     local closest = getClosestPlayerInFOV(targetPart)
-    if closest and closest.Character:FindFirstChild(targetPart) then
-        lookAt(closest.Character[targetPart].Position)
+    -- Verificar tanto "Torso" como "UpperTorso" para asegurarnos de que funcione en ambos tipos de personajes
+    if closest and (closest.Character:FindFirstChild("Head") or closest.Character:FindFirstChild("Torso") or closest.Character:FindFirstChild("UpperTorso")) then
+        local targetPosition
+        if targetPart == "Head" then
+            targetPosition = closest.Character.Head.Position
+        else
+            targetPosition = closest.Character:FindFirstChild("Torso") and closest.Character.Torso.Position or closest.Character.UpperTorso.Position
+        end
+        lookAt(targetPosition)
     end
 end)
