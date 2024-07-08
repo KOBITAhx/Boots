@@ -1,4 +1,4 @@
-local fov = 15  
+local fov = 15  -- Cambiado a 15
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
@@ -7,15 +7,19 @@ local Cam = game.Workspace.CurrentCamera
 local FOVring = Drawing.new("Circle")
 FOVring.Visible = true
 FOVring.Thickness = 2
-FOVring.Color = Color3.fromRGB(128, 0, 128) 
+FOVring.Color = Color3.fromRGB(128, 0, 128) -- Color púrpura
 FOVring.Filled = false
 FOVring.Radius = fov
 FOVring.Position = Cam.ViewportSize / 2
 
+local lastSwitchTime = 0
+local switchInterval = 0.5  -- Intervalo de cambio en segundos
+local targetPart = "Head"  -- Parte objetivo inicial
+
 local function updateDrawings()
     local camViewportSize = Cam.ViewportSize
     FOVring.Position = camViewportSize / 2
-    FOVring.Radius = fov
+    FOVring.Radius = fov -- Asegúrese de que el radio se actualice en cada cuadro
 end
 
 local function onKeyDown(input)
@@ -67,8 +71,19 @@ end
 
 RunService.RenderStepped:Connect(function()
     updateDrawings()
-    local closest = getClosestPlayerInFOV("Head")
-    if closest and closest.Character:FindFirstChild("Head") then
-        lookAt(closest.Character.Head.Position)
+    
+    -- Cambiar la parte objetivo cada cierto intervalo
+    if tick() - lastSwitchTime > switchInterval then
+        if targetPart == "Head" then
+            targetPart = "Torso"
+        else
+            targetPart = "Head"
+        end
+        lastSwitchTime = tick()
+    end
+
+    local closest = getClosestPlayerInFOV(targetPart)
+    if closest and closest.Character:FindFirstChild(targetPart) then
+        lookAt(closest.Character[targetPart].Position)
     end
 end)
