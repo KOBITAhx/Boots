@@ -1,13 +1,12 @@
-local fov = 15  -- Cambiado a 15
+local fov = 20  -- Cambiado a 15
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local Cam = game.Workspace.CurrentCamera
 
 local FOVring = Drawing.new("Circle")
-FOVring.Visible = true
+FOVring.Visible = false
 FOVring.Thickness = 2
-FOVring.Color = Color3.fromRGB(128, 0, 128) -- Color púrpura
 FOVring.Filled = false
 FOVring.Radius = fov
 FOVring.Position = Cam.ViewportSize / 2
